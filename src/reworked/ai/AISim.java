@@ -132,42 +132,6 @@ public class AISim {
 		Position newPos = pb.projectTileGroup(toPlaces[0], Direction.DOWN);
 		toPlaces[0].setPos(newPos);
 		pb.place(toPlaces[0], pb.getTiles());
-		//System.out.println("best move score: " + bests[2]);
-		/*
-		// Starting best positions.
-		int bestCol = 0;
-		int bestRotate = 0;
-		float bestScore = score(bestCol, bestRotate, ai, pb, toPlace);
-		for (int i = 0 - toPlace.getConfiguration()[0].length; i < pb.getNumCols(); i++) {
-			for (int j = 0; j < NUM_OF_90_DEGREE_ROTATIONS; j++) {
-				if (valid(i, j, pb, toPlace)) {
-					float caseScore = score(i, j, ai, pb, toPlace);
-					if (caseScore > bestScore) {
-						bestScore = caseScore;
-						bestCol = i;
-						bestRotate = j;
-					}
-				}
-			}
-		}
-		toPlace.setPos(new Position(pb.getNumRows() - 1, bestCol));
-		switch(bestRotate) {
-		case 0:
-			toPlace.setRotation(RotateState.DEG0);
-			break;
-		case 1:
-			toPlace.setRotation(RotateState.DEG90);
-			break;
-		case 2:
-			toPlace.setRotation(RotateState.DEG180);
-			break;
-		case 3:
-			toPlace.setRotation(RotateState.DEG270);
-			break;
-		}
-		Position newPos = pb.projectTileGroup(toPlace, Direction.DOWN);
-		toPlace.setPos(newPos);
-		pb.place(toPlace, pb.getTiles());*/
 	}
 	
 	private static boolean valid(int col, int rotate, Board pb, IBlock toPlace) {

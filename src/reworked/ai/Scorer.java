@@ -6,11 +6,21 @@ import reworked.tetris.ITile;
 /**
  * Class that has a bunch of static methods
  * for scoring the state of a board of tetris.
+ * These scores are used as a heuristic for
+ * selecting the "best" move by using the move
+ * that results in a new board state that has the
+ * lowest score.
  * @author Davis
  *
  */
 public class Scorer {
 
+	/**
+	 * Get the heights of the each column in the board, i.e.
+	 * how high the tiles are stacked in that column
+	 * @param b the board
+	 * @return array of heights
+	 */
 	public static int[] heights(Board b) {
 		ITile[] [] tiles = b.getTiles();
 		int[] heights = new int[b.getNumCols()];
@@ -40,6 +50,11 @@ public class Scorer {
 		return heights;
 	}
 	
+	/**
+	 * Gets average height of the board
+	 * @param b the board
+	 * @return average height
+	 */
 	public static float averageHeight(Board b) {
 		int[] heights = heights(b);
 		float total = 0;
@@ -49,6 +64,11 @@ public class Scorer {
 		return total / heights.length;
 	}
 	
+	/**
+	 * Gets total height of the board
+	 * @param b the board
+	 * @return total height
+	 */
 	public static int totalHeight(Board b) {
 		int[] heights = heights(b);
 		int total = 0;
@@ -57,6 +77,7 @@ public class Scorer {
 		}
 		return total;
 	}
+	
 	
 	public static int totalHeightWeightedByAltitude(Board b) {
 		int[] heights = heights(b);
@@ -67,6 +88,11 @@ public class Scorer {
 		return total;
 	}
 	
+	/**
+	 * Gets the number of cells that are filled in the board
+	 * @param b the board
+	 * @return number of filled cells
+	 */
 	public static int numCells(Board b) {
 		ITile[] [] tiles = b.getTiles();
 		int num = 0;
@@ -80,6 +106,11 @@ public class Scorer {
 		return num;
 	}
 	
+	/**
+	 * Gets the standard deviation of the heights of the columns in the board
+	 * @param b the board
+	 * @return standard deviation of board heights
+	 */
 	public static float standardDev(Board b) {
 		int[] heights = heights(b);
 		float avg = averageHeight(b);
@@ -90,6 +121,11 @@ public class Scorer {
 		return (float) Math.sqrt(sum / (b.getNumCols() - 1));
 	}
 	
+	/**
+	 * Gets the total amount of tiles that are filled in above holes in the board
+	 * @param b the board
+	 * @return total numbers of tiles that are filled in above holes
+	 */
 	public static int numHeightAboveHoles(Board b) {
 		int[] heights = new int[b.getNumCols()];
 		for (int i = 0; i < heights.length; i++) {
@@ -102,7 +138,12 @@ public class Scorer {
 		return sum;
 	}
 
-	
+	/**
+	 * Gets the number of holes in the board.
+	 * A hole is considered an empty tile that has filled in tiles above it
+	 * @param b the board
+	 * @return the numbers of holes
+	 */
 	public static int numHoles(Board b) {
 		int holes = 0;
 		for (int i = 0; i < b.getNumCols(); i++) {

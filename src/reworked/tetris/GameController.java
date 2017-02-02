@@ -3,8 +3,6 @@ package reworked.tetris;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JFrame;
@@ -74,69 +72,6 @@ public class GameController {
 		}
 	};
 	
-	private boolean left, right, down, clockwise;
-	
-	private KeyListener keyL = new KeyListener() {
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				left = true;
-				break;
-			case KeyEvent.VK_RIGHT:
-				right = true;
-				break;
-			case KeyEvent.VK_UP:
-				clockwise = true;
-				break;
-			case KeyEvent.VK_DOWN:
-				down = true;
-				break;
-		}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	};
-	
-	public boolean processInputs() {
-		IBlock player = board.getPlayer();
-		boolean moved = false;
-		if (left) {
-			board.moveTileGroup(player, Direction.LEFT, 1, OnHit.NOTHING);
-			left = false;
-			moved = true;
-		}
-		if (right) {
-			board.moveTileGroup(player, Direction.RIGHT, 1, OnHit.NOTHING);
-			right = false;
-			moved = true;
-		}
-		if (down) {
-			while (board.getPlayer() != null) {
-				board.movePlayerDown();
-			}
-			down = false;
-		}
-		if (clockwise) {
-			board.rotateBlock(player, true);
-			clockwise = false;
-			moved = true;
-		}
-		return moved;
-	}
-	
 	/**
 	 * Creates the game controller.
 	 */
@@ -148,7 +83,6 @@ public class GameController {
 		frame.setResizable(false);
 		frame.setTitle("Tetris");
 		frame.add(panel);
-		frame.addKeyListener(keyL);
 		frame.setVisible(true);
 	}
 	
@@ -156,6 +90,9 @@ public class GameController {
 	
 	private int linesCleared = 0;
 	
+	// The number of pieces known to the AI
+	// basically its search depth - how many moves in advance
+	// does it look
 	public static final int PIECES_KNOWN = 2;
 
 	/**
@@ -185,18 +122,9 @@ public class GameController {
 					// Only do things while the game is not paused.
 					if (!paused) {
 						count++;
-						
-						// First move the player according to the inputs.
-						if(processInputs()) {
-							// If they moved set count back to zero.
-							// This makes it such that movement stops the player from going down.
-							count = 0;
-						}
 
 						// Only move down every counts_per_down game loops.
 						if (count >= counts_per_down) {
-							// Then move the player down.
-							//board.movePlayerDown();
 							count = 0;
 							AISim.newBoard(ai, board, pg, PIECES_KNOWN);
 							frame.repaint();
@@ -209,7 +137,6 @@ public class GameController {
 							if (full.length > 0) {
 								// Delete the rows.
 								board.clearRows(full);
-								// TODO: Give the player points.
 								linesCleared += full.length;
 							}
 							
@@ -221,9 +148,6 @@ public class GameController {
 								break;
 							}
 							
-							// Create a new block for the player to control.
-							//board.spawnNewPlayerBlock(pg.takeNextPiece());
-							
 						}
 						System.out.println("lines: " + linesCleared);
 						try {
@@ -231,7 +155,6 @@ public class GameController {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						//frame.repaint();
 					}
 				}
 				
